@@ -5,13 +5,14 @@ const INITIAL_STATE = {
         username: ""
     },
     isLoggedIn: false,
-    loginError: ""
+    loginError: "",
+    searchResults: []
 };
 export default function (state = INITIAL_STATE, action) {
     const { type, payload } = action;
     switch (type) {
         case ACTION_TYPES.LOGIN_SUCCESS:
-            localStorage.setItem('authenticated', JSON.stringify({ username: payload }));
+            sessionStorage.setItem('authenticated', JSON.stringify({ username: payload }));
             state = {
                 ...state,
                 userInfo: {
@@ -21,17 +22,28 @@ export default function (state = INITIAL_STATE, action) {
             }
             break;
         case ACTION_TYPES.LOGIN_FAILED:
-            console.log('inside LOGOUT state ', payload)
             state = {
                 ...state, loginError: payload
             }
             break;
         case ACTION_TYPES.LOGOUT:
-            localStorage.removeItem("authenticated")
+            sessionStorage.removeItem("authenticated")
             state = {
                 ...state,
                 userInfo: { username: "" },
                 isLoggedIn: false
+            }
+            break;
+        case ACTION_TYPES.SEARCH_SUCCESS:
+            state = {
+                ...state,
+                searchResults: payload
+            }
+            break;
+        case ACTION_TYPES.SEARCH_FAILED:
+            state = {
+                ...state,
+                searchResults: []
             }
             break;
         default:
